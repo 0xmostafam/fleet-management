@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BusController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\TripController;
@@ -27,9 +28,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // Trip routes
     Route::resource('/trips', TripController::class)->except(['create', 'edit']);
 
-    // Seats routes group
+    // Bus Routes
+    Route::resource('/buses', BusController::class)->except(['index', 'show', 'create', 'edit']);
+
+    // reservations routes group
     Route::prefix('/reservations')->group(function () {
-        Route::get('/start/{start_station}/end/{end_station}', [ReservationController::class, 'index']);
+        Route::get('/', [ReservationController::class, 'index']);
+        Route::get('/start/{start_station}/end/{end_station}', [ReservationController::class, 'listReservations']);
         Route::post('book', [ReservationController::class, 'book']);
     });
 });

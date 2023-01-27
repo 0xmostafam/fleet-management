@@ -23,8 +23,8 @@ class TripSeeder extends Seeder
                 $endStation = $stations->random();
             } while($startStation->id == $endStation->id && $stations->count() > 1);
             
-            $startTime = Carbon::now();
-            $endTime = Carbon::now()->addHours(2);
+            $startTime = Carbon::now()->addDay(1);
+            $endTime = Carbon::now()->addDay(1)->addHours(2);
             $busLatestEndTime = $bus->getLatestTripEndTime();
             if($busLatestEndTime){
                 $startTime = Carbon::parse($busLatestEndTime)->addMinutes(30);

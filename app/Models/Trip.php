@@ -65,7 +65,8 @@ class Trip extends Model
     public static function getAllValidTrips($startStation, $endStation)
     {
 
-        $validTrips = Trip::whereHas('tripStops', function($query) use ($startStation){
+        $validTrips = Trip::where( 'start_time', '>', now()
+        )-> whereHas('tripStops', function($query) use ($startStation){
             $query->where('station_id', $startStation);
         })->whereHas('tripStops', function($query) use ($endStation){
             $query->where('station_id', $endStation);

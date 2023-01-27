@@ -40,7 +40,7 @@ class StationController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|unique:stations,name',
+            'name' => 'required|unique:station,name',
         ]);
 
         $station = Station::create($request->all());
@@ -61,7 +61,7 @@ class StationController extends Controller
         }
 
         $fields = $this->validate($request, [
-            'name' => 'required|unique:stations,name,' . $id,
+            'name' => 'required|unique:station,name,' . $id,
         ]);
 
         $station->update([

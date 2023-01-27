@@ -70,14 +70,13 @@ class TripController extends Controller
     public function store(Request $request)
     {
         $fields = $this->validate($request, [
-            'bus_id' => 'required|exists:buses,id',
+            'bus_id' => 'required|exists:bus,id',
             'start_time' => 'required|date_format:Y-m-d H:i:s',
-            'end_time' => 'required|date_format:Y-m-d H:i:s',
+            'end_time' => 'required|date_format:Y-m-d H:i:s|after:start_time',
             'stops' => 'required|array|min:2',
-            'stops.*' => 'required|numeric|exists:stations,id|distinct',
+            'stops.*' => 'required|numeric|exists:station,id|distinct',
         ]);
-
-        // check if this bus have a trip at the same interval time
+        
         $trip = Trip::where('bus_id', $fields['bus_id'])
             ->where(function ($query) use ($fields) {
                 $query->whereBetween('start_time', [$fields['start_time'], $fields['end_time']])
@@ -97,7 +96,14 @@ class TripController extends Controller
             'end_station_id' => $fields['stops'][count($fields['stops']) - 1],
         ]);
 
-        $trip->tripStops()->createMany($fields["stops"]);
+        $stops = [];
+        for ($i = 0; $i < count($fields['stops']); $i++) {
+            $stops[] = [
+                'station_id' => $fields['stops'][$i],
+                'order' => $i + 1,
+            ];
+        }
+        $trip->tripStops()->createMany($stops);
         
         $response = [
             'id' => $trip->id,
@@ -118,23 +124,22 @@ class TripController extends Controller
         if (!$trip) {
             return response()->json(['message' => 'Trip not found'], 404);
         }
-
         $fields = $this->validate($request, [
-            'bus_id' => 'required|exists:buses,id',
+            'bus_id' => 'required|exists:bus,id',
             'start_time' => 'required|date_format:Y-m-d H:i:s',
-            'end_time' => 'required|date_format:Y-m-d H:i:s',
-            'stops' => 'required|array',
-            'stops.*' => 'required|numeric|exists:stations,id|distinct',
+            'end_time' => 'required|date_format:Y-m-d H:i:s|after:start_time',
+            'stops' => 'required|array|min:2',
+            'stops.*' => 'required|numeric|exists:station,id|distinct',
         ]);
 
-        $trip = Trip::where('bus_id', $fields['bus_id'])
+        $checkTripBus = Trip::where('bus_id', $fields['bus_id'])
             ->where(function ($query) use ($fields) {
                 $query->whereBetween('start_time', [$fields['start_time'], $fields['end_time']])
                     ->orWhereBetween('end_time', [$fields['start_time'], $fields['end_time']]);
             })
             ->first();
 
-        if ($trip) {
+        if ($checkTripBus) {
             return response()->json(['message' => 'This bus have a trip at the same interval time'], 400);
         }
 
@@ -152,8 +157,14 @@ class TripController extends Controller
             'end_station_id' => $fields['stops'][count($fields['stops']) - 1],
         ]);
 
-        $trip->tripStops()->delete();
-        $trip->tripStops()->createMany($fields["stops"]);
+        $stops = [];
+        for ($i = 0; $i < count($fields['stops']); $i++) {
+            $stops[] = [
+                'station_id' => $fields['stops'][$i],
+                'order' => $i + 1,
+            ];
+        }
+        $trip->tripStops()->createMany($stops);
         
         $response = [
             'id' => $trip->id,
