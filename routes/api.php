@@ -16,6 +16,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // User Routes
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    // Stations routes
+    Route::get('/stations', [StationController::class, 'index']);
+
     // Seats routes group
     Route::prefix('/reservations')->group(function () {
         Route::get('/start/{start_station}/end/{end_station}', [ReservationController::class, 'index']);
