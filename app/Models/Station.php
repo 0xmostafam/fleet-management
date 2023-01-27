@@ -14,4 +14,9 @@ class Station extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function trips()
+    {
+        return $this->belongsToMany(Trip::class, 'trip_stop', 'station_id', 'trip_id');
+    }
 }

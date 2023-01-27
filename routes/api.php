@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/register/', [AdminAuthController::class, 'createAdmin']);
 
     // Stations routes
-    Route::get('/stations', [StationController::class, 'index']);
+    Route::resource('/stations', StationController::class)->except(['create', 'edit']);
 
     // Seats routes group
     Route::prefix('/reservations')->group(function () {
