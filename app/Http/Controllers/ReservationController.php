@@ -24,10 +24,10 @@ class ReservationController extends Controller
         foreach ($trips as $trip) {
 
             $validTrip = [
-                'id' => $trip->id,
+                'trip_id' => $trip->id,
                 'bus_id' => $trip->bus->name,
-                'start_station_id' => $trip->startStation->name,
-                'end_station_id' => $trip->endStation->name,
+                'start_station' => $trip->startStation->name,
+                'end_station' => $trip->endStation->name,
                 'start_time' => $trip->start_time,
                 'end_time' => $trip->end_time,
                 "start_station_order" => $trip->getStopOrder($startStation),

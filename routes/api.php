@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\StationController;
@@ -15,6 +16,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // User Routes
     Route::post('/logout', [AuthController::class, 'logout']);
+    
+    // Create Admin Routes
+    Route::post('/admin/register/', [AdminAuthController::class, 'createAdmin']);
 
     // Stations routes
     Route::get('/stations', [StationController::class, 'index']);
