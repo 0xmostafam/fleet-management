@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\StationController;
+use App\Http\Controllers\TripController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Stations routes
     Route::resource('/stations', StationController::class)->except(['create', 'edit']);
+
+    // Trip routes
+    Route::resource('/trips', TripController::class)->except(['create', 'edit']);
 
     // Seats routes group
     Route::prefix('/reservations')->group(function () {

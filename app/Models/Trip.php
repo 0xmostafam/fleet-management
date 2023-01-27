@@ -18,6 +18,10 @@ class Trip extends Model
         'end_time',
     ];
 
+    public function name()
+    {
+        return $this->startStation->name . ' - ' . $this->endStation->name;
+    }
     public function bus()
     {
         return $this->belongsTo(Bus::class);
