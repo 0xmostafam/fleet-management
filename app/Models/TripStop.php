@@ -27,4 +27,9 @@ class TripStop extends Model
     {
         return $this->belongsTo(Station::class);
     }
+
+    public function name()
+    {
+        return $this->station->name;
+    }
 }

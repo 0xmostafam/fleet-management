@@ -20,4 +20,19 @@ class Reservation extends Model
         'start_station_id',
         'end_station_id',
     ];
+
+    public function trip()
+    {
+        return $this->belongsTo(Trip::class);
+    }
+
+    public function busSeat()
+    {
+        return $this->belongsTo(BusSeat::class, 'bus_seat_id');
+    }
+
+    public function seatNumber()
+    {
+        return $this->busSeat->seat_number;
+    }
 }

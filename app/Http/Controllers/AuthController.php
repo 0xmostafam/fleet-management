@@ -47,6 +47,10 @@ class AuthController extends Controller
             ], 401);
         }
 
+        if($user->tokens()->count() > 0){
+            $user->tokens()->delete();
+        }
+        
         $token = $user->createToken('authToken')->plainTextToken;
 
         $response = [

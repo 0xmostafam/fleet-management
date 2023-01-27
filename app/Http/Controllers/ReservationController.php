@@ -9,7 +9,32 @@ use Illuminate\Validation\Rule;
 
 class ReservationController extends Controller
 {
-    public function index($startStation, $endStation)
+    public function index()
+    {
+        $user = auth()->user();
+
+        $reservations = $user->reservations()->with('trip')->get();
+
+        $response = [
+            'reservations' => $reservations->map(function ($reservation) {
+                return [
+                    'id' => $reservation->id,
+                    'trip_id' => $reservation->trip_id,
+                    'trip' => $reservation->trip->name(),
+                    'bus' => $reservation->trip->bus->name,
+                    'start_station' => $reservation->trip->startStation->name,
+                    'end_station' => $reservation->trip->endStation->name,
+                    'start_time' => $reservation->trip->start_time,
+                    'end_time' => $reservation->trip->end_time,
+                    'seat_number' => $reservation->seatNumber(),
+                ];
+            }),
+        ];
+
+        return response()->json($response, 200);
+    }
+
+    public function listReservations($startStation, $endStation)
     {
         validator([
             'start_station' => $startStation,
